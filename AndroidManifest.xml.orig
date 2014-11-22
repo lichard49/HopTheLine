@@ -31,6 +31,7 @@
             android:name=".VenmoWebViewActivity"
             android:label="VenmoWebViewActivity" >
         </activity>
+<<<<<<< HEAD
         
         <service
             android:name=".BackgroundService"
@@ -41,6 +42,16 @@
             </intent-filter>
         </service>
         
+=======
+        <service
+            android:name=".FirebaseBackgroundService"
+            android:exported="false"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="com.lichard49.hoptheline.FirebaseBackgroundService" />
+            </intent-filter>
+        </service>
+>>>>>>> ac0d67fec395cea3f0098229061d066d41493ee8
     </application>
     
 

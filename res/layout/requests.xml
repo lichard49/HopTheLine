@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+	<TextView
+	    android:id="@+id/request_label_1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentTop="true"
+	    android:text="Hop in line at:"
+	    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	<Spinner
+	    android:id="@+id/location_spinner"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/request_label_1" />
+
+	<TextView
+	    android:id="@+id/request_label_2"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/location_spinner"
+	    android:text="for some:"
+	    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/request_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/request_label_2"
+        android:ems="10"
+        android:hint="Hopping in line for... e.g. coffee"
+        android:textAppearance="?android:attr/textAppearanceMedium" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/request_label_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/request_field"
+        android:text="Tack on how much?"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/request_value_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/request_label_3"
+        android:ems="10"
+        android:hint="Worth?"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/request_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/request_value_field"
+        android:text="Make request" />
+    
+</RelativeLayout>
