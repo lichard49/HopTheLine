@@ -8,13 +8,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lichard49.hoptheline.HopLineActivity" >
 
-    <EditText
-        android:id="@+id/request_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="What are you too busy to wait in line for?" >
-    </EditText>
+	<Spinner
+	    android:id="@+id/location_spinner"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
     
     <Button
         android:id="@+id/request_button"
@@ -55,5 +52,15 @@
 
         <requestFocus />
     </EditText>
+
+    <EditText
+        android:id="@+id/request_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/planets_spinner"
+        android:layout_alignTop="@+id/planets_spinner"
+        android:layout_marginTop="49dp"
+        android:ems="10"
+        android:hint="What are you too busy to wait in line for?" />
 
 </RelativeLayout>

@@ -39,6 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class HopLineActivity extends Activity
 	private final String baseURL= "https://maps.googleapis.com/maps/api/place/textsearch/json";
 	private final String apiKey = "AIzaSyACATQdsDQLuB54k8aJ8PoFsuQFroRbHaU";
 	private final int REQUEST_CODE_VENMO_APP_SWITCH = 134;
+	private Spinner spinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -104,7 +106,16 @@ public class HopLineActivity extends Activity
 		});
 		requestItems = new ArrayList<RequestItem>();
 		gps = new GPSTracker(this);
-		new LocationRequestTask().execute(baseURL + "?query=coffee&location=" + gps.getLatitude() + "," + gps.getLongitude() + "&radius=1&key=" + apiKey);
+		try {
+			String[] locationsList = new LocationRequestTask().execute(baseURL + "?query=coffee&location=" + gps.getLatitude() + "," + gps.getLongitude() + "&radius=1&key=" + apiKey).get();
+			spinner = (Spinner) findViewById(R.id.location_spinner);
+			ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(HopLineActivity.this,   android.R.layout.simple_spinner_item, locationsList);
+	        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+	        spinner.setAdapter(spinnerArrayAdapter);
+		} catch (Exception e) {
+			//well fuck
+		}
+		
 	}
 	
 	@Override
@@ -243,13 +254,15 @@ public class HopLineActivity extends Activity
 			return items.size();
 		}
 	}
-	private class LocationRequestTask extends AsyncTask<String, String, String>{
-
+	
+	private class LocationRequestTask extends AsyncTask<String, String, String[]>{
+		
 	    @Override
-	    protected String doInBackground(String... uri) {
+	    protected String[] doInBackground(String... uri) {
 	        HttpClient httpclient = new DefaultHttpClient();
 	        HttpResponse response;
 	        String responseString = null;
+	        String[] locationsList = new String[5];
 	        try {
 	            response = httpclient.execute(new HttpGet(uri[0]));
 	            StatusLine statusLine = response.getStatusLine();
@@ -270,13 +283,14 @@ public class HopLineActivity extends Activity
 	        }
 	        try {
 	        	JSONObject jObject = new JSONObject(responseString);
-		        JSONArray jArray = jObject.getJSONArray("results");		        
+		        JSONArray jArray = jObject.getJSONArray("results");	
 		        for (int i=0; i < 5; i++)
 		        {
 		            try {
 		                JSONObject jObj = jArray.getJSONObject(i);
 		                // Pulling items from the array
 		                String s = jObj.getString("name") + ";" + jObj.getString("formatted_address");
+		                locationsList[i] = s;
 		                Log.d("location", s);
 		            } catch (JSONException e) {
 		                // Oops
@@ -286,7 +300,18 @@ public class HopLineActivity extends Activity
 	        	e.printStackTrace();
 	        }
 	        
-	        return responseString;
+	        return locationsList;
 	    }
+	    
+	    /*@Override
+	    protected void onPostExecute(Void result) {
+	        mimagesPagerFragment.updateAdapter(mImages);
+	    }
+	    @Override
+	    protected void onPostExecute(Void fuck) {
+	    	ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(HopLineActivity.this,   android.R.layout.simple_spinner_item, locationsList);
+	        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+	        spinner.setAdapter(spinnerArrayAdapter);
+	    }*/
 	}
 }
