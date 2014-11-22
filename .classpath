@@ -6,5 +6,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="libs/firebase-client-android-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/json_simple.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

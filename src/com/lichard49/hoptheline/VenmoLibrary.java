@@ -1,5 +1,16 @@
 package com.lichard49.hoptheline;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.simple.JSONValue;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,17 +19,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 public class VenmoLibrary {
     private static final String VENMO_PACKAGE = "com.venmo";
