@@ -8,14 +8,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lichard49.hoptheline.HopLineActivity" >
 
-    <EditText
-        android:id="@+id/request_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="coffee" >
+	<Spinner
+	    android:id="@+id/location_spinner"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
 
-    </EditText>
     
     <Button
         android:id="@+id/request_button"
@@ -65,5 +62,6 @@
         android:layout_alignTop="@+id/request_field"
         android:text="I want to hop the line for"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:hint="What are you too busy to wait in line for?" />
 
 </RelativeLayout>
