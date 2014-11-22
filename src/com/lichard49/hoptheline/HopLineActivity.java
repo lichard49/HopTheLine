@@ -1,18 +1,34 @@
 package com.lichard49.hoptheline;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +47,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-
 public class HopLineActivity extends Activity
 {
 	private Dialog dialog;
@@ -44,6 +59,11 @@ public class HopLineActivity extends Activity
 	
 	private Firebase firebase;
 	private String ID; 
+
+	private GPSTracker gps;
+	private final String baseURL= "https://maps.googleapis.com/maps/api/place/textsearch/json";
+	private final String apiKey = "AIzaSyACATQdsDQLuB54k8aJ8PoFsuQFroRbHaU";
+	private final int REQUEST_CODE_VENMO_APP_SWITCH = 134;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -83,6 +103,8 @@ public class HopLineActivity extends Activity
 			
 		});
 		requestItems = new ArrayList<RequestItem>();
+		gps = new GPSTracker(this);
+		new LocationRequestTask().execute(baseURL + "?query=coffee&location=" + gps.getLatitude() + "," + gps.getLongitude() + "&radius=1&key=" + apiKey);
 	}
 
 	private int pressedPosition = -1;
@@ -155,6 +177,10 @@ public class HopLineActivity extends Activity
 						{	
 							data.child("status").getRef().setValue("moneysent");
 							Toast.makeText(getApplicationContext(), "Sending money now", Toast.LENGTH_SHORT).show();
+							
+							//wrong phone number to charge
+							//Intent venmoIntent = VenmoLibrary.openVenmoPayment("2133", "HopTheLine", data.getName(), data.child("price").getValue().toString(), data.child("description").getValue().toString(), "pay");
+					        //startActivityForResult(venmoIntent, REQUEST_CODE_VENMO_APP_SWITCH);
 						}
 					}
 				}
@@ -200,5 +226,51 @@ public class HopLineActivity extends Activity
 		{
 			return items.size();
 		}
+	}
+	private class LocationRequestTask extends AsyncTask<String, String, String>{
+
+	    @Override
+	    protected String doInBackground(String... uri) {
+	        HttpClient httpclient = new DefaultHttpClient();
+	        HttpResponse response;
+	        String responseString = null;
+	        try {
+	            response = httpclient.execute(new HttpGet(uri[0]));
+	            StatusLine statusLine = response.getStatusLine();
+	            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+	                ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                response.getEntity().writeTo(out);
+	                out.close();
+	                responseString = out.toString();
+	            } else{
+	                //Closes the connection.
+	                response.getEntity().getContent().close();
+	                throw new IOException(statusLine.getReasonPhrase());
+	            }
+	        } catch (ClientProtocolException e) {
+	            //TODO Handle problems..
+	        } catch (IOException e) {
+	            //TODO Handle problems..
+	        }
+	        try {
+	        	JSONObject jObject = new JSONObject(responseString);
+		        JSONArray jArray = jObject.getJSONArray("results");		        
+		        for (int i=0; i < 5; i++)
+		        {
+		            try {
+		                JSONObject jObj = jArray.getJSONObject(i);
+		                // Pulling items from the array
+		                String s = jObj.getString("name") + ";" + jObj.getString("formatted_address");
+		                Log.d("location", s);
+		            } catch (JSONException e) {
+		                // Oops
+		            }
+		        }
+	        } catch(Exception e) {
+	        	e.printStackTrace();
+	        }
+	        
+	        return responseString;
+	    }
 	}
 }
