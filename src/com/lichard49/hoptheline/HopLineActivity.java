@@ -71,6 +71,9 @@ public class HopLineActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hop_line);
 		
+		Intent serviceIntent = new Intent(this, BackgroundService.class);
+		startService(serviceIntent);
+		
 		dialog = new Dialog(HopLineActivity.this);
 		dialog.setTitle("Thanks for hopping!");
 		dialog.setContentView(R.layout.request_dialog);
@@ -128,7 +131,7 @@ public class HopLineActivity extends Activity
 					{
 						RequestItem mine = requestItems.get(pressedPosition);
 						Firebase me = firebase.child(""+mine.ID);
-						me.child("status").setValue("requestmoney");
+						me.child("status").setValue("requestmoney"+ID);
 						dialogHandler.sendEmptyMessage(0);
 					}
 				});
@@ -173,14 +176,15 @@ public class HopLineActivity extends Activity
 					}
 					else
 					{
-						if(((String)data.child("status").getValue()).equals("requestmoney"))
-						{	
+						if(((String)data.child("status").getValue()).contains("requestmoney"))
+						{
+							String theirID = ((String)data.child("status").getValue()).replace("requestmoney", "");
 							data.child("status").getRef().setValue("moneysent");
 							Toast.makeText(getApplicationContext(), "Sending money now", Toast.LENGTH_SHORT).show();
 							
 							//wrong phone number to charge
-							//Intent venmoIntent = VenmoLibrary.openVenmoPayment("2133", "HopTheLine", data.getName(), data.child("price").getValue().toString(), data.child("description").getValue().toString(), "pay");
-					        //startActivityForResult(venmoIntent, REQUEST_CODE_VENMO_APP_SWITCH);
+							Intent venmoIntent = VenmoLibrary.openVenmoPayment("2133", "HopTheLine", theirID, data.child("price").getValue().toString(), data.child("description").getValue().toString(), "pay");
+					        startActivityForResult(venmoIntent, REQUEST_CODE_VENMO_APP_SWITCH);
 						}
 					}
 				}
