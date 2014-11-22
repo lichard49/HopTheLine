@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="16"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -33,6 +33,14 @@
             android:name=".VenmoWebViewActivity"
             android:label="VenmoWebViewActivity" >
         </activity>
+        <service
+            android:name=".FirebaseBackgroundService"
+            android:exported="false"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="com.lichard49.hoptheline.FirebaseBackgroundService" />
+            </intent-filter>
+        </service>
     </application>
     
 

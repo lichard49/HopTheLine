@@ -106,6 +106,22 @@ public class HopLineActivity extends Activity
 		gps = new GPSTracker(this);
 		new LocationRequestTask().execute(baseURL + "?query=coffee&location=" + gps.getLatitude() + "," + gps.getLongitude() + "&radius=1&key=" + apiKey);
 	}
+	
+	@Override
+	public void onPause() {
+	    super.onPause();  // Always call the superclass method first
+	    Log.d("onpause", "pause");
+	    
+	    startService(new Intent(HopLineActivity.this,FirebaseBackgroundService.class));
+	}
+	
+	@Override
+	public void onResume() {
+	    super.onResume();  // Always call the superclass method first
+	    Log.d("onResume", "resume");
+	    
+	    stopService(new Intent(HopLineActivity.this,FirebaseBackgroundService.class));
+	}
 
 	private int pressedPosition = -1;
 	private Handler dialogHandler = new Handler()
@@ -194,7 +210,7 @@ public class HopLineActivity extends Activity
 		}
 	};
 	
-	private class RequestListAdapter extends ArrayAdapter<RequestItem>
+	public class RequestListAdapter extends ArrayAdapter<RequestItem>
 	{
 		private Context context;
 		private final List<RequestItem> items;
